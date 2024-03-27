@@ -5,14 +5,37 @@ import { ApolloServer } from "apollo-server-express";
 import { getSchema } from "./graphql/schema";
 import { getMyPrismaClient } from "./db";
 import { IMyContext } from "./interface";
+import { Redis } from "ioredis";
+import session from "express-session";
+import redisSession from "connect-redis";
+import { isProd } from "./utils";
 
 const main = async () => {
   dotenv.config();
+  const redisClient = new Redis();
+  const sessionStore = redisSession(session);
+  const prisma = await getMyPrismaClient();
 
   const app = express();
 
+  app.use(
+    session({
+      store: new sessionStore({ client: redisClient }),
+      secret: process.env.SESSION_SECRET!,
+      name: "gql-api",
+      resave: false,
+      saveUninitialized: false,
+      // store
+      cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24,
+        secure: isProd(),
+        sameSite: "lax",
+      },
+    })
+  );
+
   const schema = getSchema();
-  const prisma = await getMyPrismaClient();
 
   const apolloServer = new ApolloServer({
     schema,
