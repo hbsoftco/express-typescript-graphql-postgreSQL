@@ -1,4 +1,5 @@
 import express from "express";
+import dotenv from "dotenv";
 
 import { ApolloServer } from "apollo-server-express";
 import { getSchema } from "./graphql/schema";
@@ -6,6 +7,8 @@ import { getMyPrismaClient } from "./db";
 import { IMyContext } from "./interface";
 
 const main = async () => {
+  dotenv.config();
+
   const app = express();
 
   const schema = getSchema();

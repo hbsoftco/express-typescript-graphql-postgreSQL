@@ -2,7 +2,6 @@ import { User } from "@prisma/client";
 import { mutationType, stringArg } from "nexus";
 import { IMyContext } from "../interface";
 import { hashPassword } from "../utils";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const Mutation = mutationType({
   definition(t) {
