@@ -5,6 +5,7 @@
     "lib": ["DOM", "ES6", "ES2017", "ESNext.AsyncIterable"],
     "sourceMap": true,
     "outDir": "./dist",
+    "strict": true,
     "moduleResolution": "node",
     "removeComments": true,
     "noImplicitAny": true,

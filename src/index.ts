@@ -2,13 +2,19 @@ import express from "express";
 
 import { ApolloServer } from "apollo-server-express";
 import { getSchema } from "./graphql/schema";
+import { getMyPrismaClient } from "./db";
+import { IMyContext } from "./interface";
 
 const main = async () => {
   const app = express();
 
   const schema = getSchema();
+  const prisma = await getMyPrismaClient();
 
-  const apolloServer = new ApolloServer({ schema });
+  const apolloServer = new ApolloServer({
+    schema,
+    context: ({ req, res }): IMyContext => ({ req, res, prisma }),
+  });
 
   await apolloServer.start();
 
